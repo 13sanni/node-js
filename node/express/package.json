@@ -1,6 +1,13 @@
 {
   "dependencies": {
     "express": "^5.2.1",
-    "nodemon": "^3.1.11"
-  }
+    "nodemon": "^3.1.11",
+      "type": "module"
+    },
+
+  "scripts": {
+  "dev": "nodemon index.js",
+  "type": "module"
+}
+
 }

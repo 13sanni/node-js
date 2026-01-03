@@ -4,15 +4,19 @@ import refreshAccessToken from "../controllers/refreshAccessController.js";
 import { Router } from "express";
 import requireAdmin from "../middlewares/roleMiddleware.js";
 
-
 const router = Router();
 
 router.post("/", createUser);
+
 router.post("/login", loginUser);
+
+router.post("/refresh", refreshAccessToken)
+
 router.get("/profile", verifyToken, (req, res) => {
     res.status(200).send({
         success: true,
         message: "user profile data",
+    
         user: req.user
     });
 });
@@ -26,6 +30,6 @@ router.get("/adminpanel", verifyToken, requireAdmin, (req, res) => {
 })
 
 
-router.post("/refresh", refreshAccessToken)
+
 
 export default router;

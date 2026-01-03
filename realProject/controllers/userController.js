@@ -67,20 +67,18 @@ export function loginUser(req, res, next) {
 }
 
 //json web token
+ export let refresh=[""];
+
 
 export function generateToken(email, res, next) {
+     let refreshToken = jwt.sign({email},"myrefreshsecret",{expiresIn:'7d'}) 
        
-    jwt.sign({email,role:"user"}, 'mysecretkey', {expiresIn: '1h'},(err, token) => {
-        if(err){
-            return next({
-                status: 500,
-                message: "error generating token"
-            });
-        }
-        res.status(200).json({
-            success: true,
-            message: "login successfull",
-            token: token
-            })
-        }
-)}
+    let token = jwt.sign({email,role:"user"}, 'mysecretkey', {expiresIn: '1h'})
+refresh.push(refreshToken);
+ res.status(200).json({
+    success: true,
+    message: "login successful",
+    refreshToken: refreshToken,
+    token: token
+})
+}

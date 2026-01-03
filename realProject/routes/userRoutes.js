@@ -1,24 +1,31 @@
-import {createUser,loginUser} from "../controllers/userController.js";
+import { createUser, loginUser } from "../controllers/userController.js";
 import verifyToken from "../middlewares/authMiddleware.js";
-
+import refreshAccessToken from "../controllers/refreshAccessController.js";
 import { Router } from "express";
 import requireAdmin from "../middlewares/roleMiddleware.js";
+
+
 const router = Router();
- router.post("/", createUser);
+
+router.post("/", createUser);
 router.post("/login", loginUser);
 router.get("/profile", verifyToken, (req, res) => {
     res.status(200).send({
         success: true,
         message: "user profile data",
-        user : req.user
+        user: req.user
     });
 });
-router.get("/adminpanel", verifyToken,requireAdmin, (req, res) => {
+
+
+router.get("/adminpanel", verifyToken, requireAdmin, (req, res) => {
     res.status(200).json({
         success: true,
         message: "welcome to admin panel"
     });
 })
 
+
+router.post("/refresh", refreshAccessToken)
 
 export default router;

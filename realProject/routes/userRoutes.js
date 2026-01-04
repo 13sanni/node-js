@@ -1,4 +1,4 @@
-import { createUser, loginUser } from "../controllers/userController.js";
+import { createUser, loginUser, logoutUser } from "../controllers/userController.js";
 import verifyToken from "../middlewares/authMiddleware.js";
 import refreshAccessToken from "../controllers/refreshAccessController.js";
 import { Router } from "express";
@@ -11,6 +11,8 @@ router.post("/", createUser);
 router.post("/login", loginUser);
 
 router.post("/refresh", refreshAccessToken)
+
+router.post("/logout", logoutUser)
 
 router.get("/profile", verifyToken, (req, res) => {
     res.status(200).send({

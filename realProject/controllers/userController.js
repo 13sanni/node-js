@@ -1,71 +1,72 @@
 import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import bcrypt  from 'bcrypt';
+import { User } from '../models/userModel.js';
 
-
-
-
-
-
-let users = [];
+// arry for storing token
+export let refresh = [""];
+export let blacklistToken = [""]
 
 export async function createUser(req, res, next) {
 
-    // validate request body
     let body = req.body;
-
-  if (!body ||!body?.email || !body?.password || !body?.name) {
-    return next({
-      status: 400,
-      message: "name, email or password is missing"
-    });
-  }
-    
-    //pushing user to array
-    const hashPassword =await bcrypt.hash(body.password, 10);
-    users.push({ email: body.email, password: hashPassword });
+    if (!body?.name || !body?.email || !body?.password) {
+        return next({
+            status: 400,
+            message: "name, email, or password missing"
+        });
+    }
 
 
-    res.status(201).send({
+    //hashing password
+    const hashPassword = await bcrypt.hash(body.password, 10);
+
+
+    const user = await User.create({
+        name: body.name,
+        password: hashPassword,
+        email: body.email
+    }
+    )
+
+    res.status(201).json({
         success: true,
         message: "user created successfully",
         user: {
-            email: body.email,
-            name: body.name
+            userId: user.id,
+            name: user.name,
+            email: user.email,
         }
+    })
 
-
-    });
-};
+}
 
 
 
 
 //login user
-export  async function loginUser (req, res, next) {
+export async function loginUser(req, res, next) {
 
     const body = req.body;
-  
-    if (!body || !body.email || !body.password) {
-        return next({
-            status: 400,
-            message: "email or password is missing"
-        });
-    }
 
-    let user = users.find(u => u.email === body.email);
+    const user = await User.findOne({ email: body.email })
     if (!user) {
         return next({
-            status: 401,
-            message: "invalid credentials"
+            status: 400,
+            message: "no user found"
         })
+
     }
+
+
     const isMatch = await bcrypt.compare(body.password, user.password);
+
     if (!isMatch) {
         return next({
             status: 401,
             message: "invalid credentials"
-        })
+        });
     }
+
 
 
     return generateToken(body.email, res, next);
@@ -73,8 +74,35 @@ export  async function loginUser (req, res, next) {
 
 }
 
+//logout controller 
+
+export function logoutUser (req,res,next){
+    let header = req.headers.authorization;
+    if(!header){
+        return next({
+            status :400,
+            message : "please provide a token"
+        })
+    }
+   let part = header.split(" ")
+    if(part.length!==2||part[0]!=="Bearer"){
+        return next({
+            statsus:401,
+            message :"invalid token"
+        })
+    }
+    let token=part[1]
+    blacklistToken.push(token)
+    res.status(201).json(
+        {
+            success:true,
+            message:"logout succesfully"
+        }
+    )
+
+}
+
 //json web token
-export let refresh = [""];
 
 
 export function generateToken(email, res, next) {

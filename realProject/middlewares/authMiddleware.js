@@ -1,4 +1,6 @@
 import jwt from "jsonwebtoken";
+import { blacklistToken } from "../controllers/userController.js";
+
 export function verifyToken(req, res, next) {
     const header = req.headers.authorization;
     if (!header) {
@@ -15,6 +17,16 @@ export function verifyToken(req, res, next) {
         });
     }
     const token = parts[1];
+
+    if(blacklistToken.includes(token)){
+         return next({
+            status : 401,
+            message:"token is expired or logged out"
+        })
+    };
+    
+       
+
     jwt.verify(token, "mysecretkey", (err, decoded) => {
         if (err) {
             next({

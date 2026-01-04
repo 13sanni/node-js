@@ -1,22 +1,15 @@
 import jwt from 'jsonwebtoken';
-import bcrypt  from 'bcrypt';
+import bcrypt from 'bcrypt';
 import { User } from '../models/userModel.js';
+import { registerUserSchema, loginUserSchema } from '../validators/userValidator.js';
+
 
 // arry for storing token
 export let refresh = [""];
 export let blacklistToken = [""]
 
 export async function createUser(req, res, next) {
-
-    let body = req.body;
-    if (!body?.name || !body?.email || !body?.password) {
-        return next({
-            status: 400,
-            message: "name, email, or password missing"
-        });
-    }
-
-
+let body = req.body
     //hashing password
     const hashPassword = await bcrypt.hash(body.password, 10);
 
@@ -45,10 +38,8 @@ export async function createUser(req, res, next) {
 
 //login user
 export async function loginUser(req, res, next) {
-
-    const body = req.body;
-
-    const user = await User.findOne({ email: body.email })
+    let body = req.body
+ const user = await User.findOne({ email: body.email })
     if (!user) {
         return next({
             status: 400,
@@ -76,27 +67,27 @@ export async function loginUser(req, res, next) {
 
 //logout controller 
 
-export function logoutUser (req,res,next){
+export function logoutUser(req, res, next) {
     let header = req.headers.authorization;
-    if(!header){
+    if (!header) {
         return next({
-            status :400,
-            message : "please provide a token"
+            status: 400,
+            message: "please provide a token"
         })
     }
-   let part = header.split(" ")
-    if(part.length!==2||part[0]!=="Bearer"){
+    let part = header.split(" ")
+    if (part.length !== 2 || part[0] !== "Bearer") {
         return next({
-            statsus:401,
-            message :"invalid token"
+            statsus: 401,
+            message: "invalid token"
         })
     }
-    let token=part[1]
+    let token = part[1]
     blacklistToken.push(token)
     res.status(201).json(
         {
-            success:true,
-            message:"logout succesfully"
+            success: true,
+            message: "logout succesfully"
         }
     )
 

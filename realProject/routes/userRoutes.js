@@ -3,12 +3,14 @@ import verifyToken from "../middlewares/authMiddleware.js";
 import refreshAccessToken from "../controllers/refreshAccessController.js";
 import { Router } from "express";
 import requireAdmin from "../middlewares/roleMiddleware.js";
-
+import { registerUserSchema,loginUserSchema } from "../validators/userValidator.js";
+import validate from "../middlewares/validate.js";
+import { loginRateLimiter } from "../middlewares/rateLimit.js";
 const router = Router();
 
-router.post("/", createUser);
+router.post("/",validate(registerUserSchema) ,createUser);
 
-router.post("/login", loginUser);
+router.post("/login",loginRateLimiter,validate(loginUserSchema) ,loginUser);
 
 router.post("/refresh", refreshAccessToken)
 

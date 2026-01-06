@@ -1,6 +1,6 @@
 import cloudinary from "../config/cloudinaryConfig.js";
 
-export function uploadtocloudinary(buffer){
+export function uploadToCloudinary(buffer){
     return new Promise((resolve, reject) => {
         const stream = cloudinary.uploader.upload_stream(
              { folder: "uploads" },
@@ -11,4 +11,5 @@ export function uploadtocloudinary(buffer){
         )
             stream.end(buffer);
     })
-}
+} 
+export default uploadToCloudinary

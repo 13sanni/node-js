@@ -7,10 +7,9 @@ import { registerUserSchema, loginUserSchema } from "../validators/userValidator
 import validate from "../middlewares/validate.js";
 import { loginRateLimiter } from "../middlewares/rateLimit.js";
 import upload from "../middlewares/upload.js";
-import { uploadToCloudinary } from "../utils/uploadToCloudinary.js";
-import { deletefromcloudinary } from "../utils/deleteFromCloudinary.js";
-import { success } from "zod";
-import { tr } from "zod/v4/locales";
+import  uploadToCloudinary  from "../utils/uploadToCloudinary.js";
+import  deletefromcloudinary from "../utils/deleteFromCloudinary.js";
+
 const router = Router();
 
 router.delete("/upload/cloud",async (req,res,next) => {

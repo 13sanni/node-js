@@ -12,3 +12,4 @@ export function deletefromcloudinary(publicId){
     )
 
 }
+export default deletefromcloudinary

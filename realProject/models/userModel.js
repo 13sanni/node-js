@@ -10,17 +10,30 @@ const userSchema = new mongoose.Schema(
     email: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
 
     password: {
       type: String,
       required: true
+    },
+
+    avatar: {
+      public_id: {
+        type: String,
+        default :null
+      },
+      url: {
+        type: String,
+       default:null
+
+      }
     }
   },
-  {
-    timestamps: true
-  }
+
+{
+  timestamps: true
+}
 );
 
 export const User = mongoose.model("User", userSchema);

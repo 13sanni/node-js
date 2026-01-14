@@ -12,11 +12,14 @@ app.get('/',(req,res)=>{ //   '/'  is consider as a root path so when ever some 
 })
 app.patch("/",(req,res)=>{
     res.send('existing file is updated')// update a existing file 
-
+})
 app.get('/page1',(req,res)=>{
     res.send('welcome to page 1')// if path is http://localhost:3000/page1  then this response is send 
 
 })
+    app.delete("/",(req,res)=>{
+        res.send("you have send a delete req")
+    })
 // we can change the resposne on based of type and keep the path name same
 
 app.post('/',(req,res)=>{

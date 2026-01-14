@@ -10,6 +10,8 @@ app.get('/',(req,res)=>{ //   '/'  is consider as a root path so when ever some 
     //and the type of req is ger then it will get this response    get is adefault type of req
     res.send("welcome to landing page")
 })
+app.patch("/",(req,res)=>{
+    res.send('existing file is updated')// update a existing file 
 
 app.get('/page1',(req,res)=>{
     res.send('welcome to page 1')// if path is http://localhost:3000/page1  then this response is send 
